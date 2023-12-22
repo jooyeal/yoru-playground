@@ -16,9 +16,14 @@ extend(geometry);
 type Props = {
   currentArgs: TInitialSceneCard | null;
   handleClickFrame: (args: TInitialSceneCard) => void;
+  handleDoubleClickFrame: (args: TInitialSceneCard) => void;
 } & TInitialSceneCard;
 
-export default function Frame({ handleClickFrame, ...rest }: Props) {
+export default function Frame({
+  handleClickFrame,
+  handleDoubleClickFrame,
+  ...rest
+}: Props) {
   const portalRef = useRef(null);
   const params = useParams();
   const router = useRouter();
@@ -56,18 +61,12 @@ export default function Frame({ handleClickFrame, ...rest }: Props) {
       >
         /{rest.id}
       </Text>
-      {/* <Text
-        // font={suspend(regular).default}
-        fontSize={0.04}
-        anchorX="right"
-        position={[0.0, -0.677, 0.01]}
-        material-toneMapped={false}
-      >
-        {author}
-      </Text> */}
       <mesh
         name={rest.id}
         onClick={(e) => (e.stopPropagation(), handleClickFrame(rest))}
+        onDoubleClick={(e) => (
+          e.stopPropagation(), handleDoubleClickFrame(rest)
+        )}
         onPointerOver={(e) => hover(true)}
         onPointerOut={() => hover(false)}
       >

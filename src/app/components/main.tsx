@@ -4,7 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import {
   CameraControls,
   PerspectiveCamera,
-  Text3D,
+  Text,
   Hud,
 } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
@@ -63,11 +63,17 @@ export default function Main({
   const cameraControlsRef = useRef<CameraControls>(null);
   const { scene } = useThree();
 
-  const moveTo = (name: string) => {
+  const moveTo = (name: string, pos?: THREE.Vector3) => {
     const active = scene.getObjectByName(name);
 
     if (active?.parent) {
-      active.parent.localToWorld(position.set(0, 0, 1.5));
+      active.parent.localToWorld(
+        position.set(
+          pos?.x ? pos.x : 0,
+          pos?.y ? pos.y : 0,
+          pos?.z ? pos.z : 1.5
+        )
+      );
       active.parent.localToWorld(focus.set(0, 0, 0));
     }
     if (cameraControlsRef.current)
@@ -87,9 +93,10 @@ export default function Main({
 
   // initial move
   useFrame((state, delta) => {
+    const speed = 1;
+    const elapsedTime = state.clock.elapsedTime * speed;
+
     if (cameraControlsRef.current && !currentArgs) {
-      const speed = 1;
-      const elapsedTime = state.clock.elapsedTime * speed;
       if (elapsedTime < 3)
         cameraControlsRef.current.setPosition(0, 0, elapsedTime);
     }
@@ -102,20 +109,36 @@ export default function Main({
         minPolarAngle={0}
         maxPolarAngle={Math.PI / 2}
       />
+      <mesh>
+        <mesh name="init" position={[0, 0, 0]}></mesh>;
+      </mesh>
       <Galary />
       <Init
         initialSceneCardList={initialSceneCardList}
         handleClickFrame={(args: TInitialSceneCard) => {
           setCurrentArgs(args);
-          if (cameraControlsRef.current) {
-            moveTo(args.id);
-          }
+          moveTo(args.id);
+        }}
+        handleDoubleClickFrame={(args: TInitialSceneCard) => {
+          setCurrentArgs(args);
+          moveTo(args.targetSceneName, new THREE.Vector3(0, 2, 5));
         }}
         currentArgs={currentArgs}
       />
       <Hud>
-        <PerspectiveCamera makeDefault position={[0, 0, 10]} />
-        <Text3D position={[-3, 8, -10]} font="/Inter_Bold.json"></Text3D>
+        <PerspectiveCamera makeDefault position={[0, 0, 20]} />
+        <Text
+          position={[16, 8.5, 1]}
+          font="/Inter_Bold.json"
+          color="ivory"
+          fontSize={0.5}
+          onClick={(e) => {
+            e.stopPropagation();
+            moveTo("init", new THREE.Vector3(0, 0, 3));
+          }}
+        >
+          GO TO MAIN
+        </Text>
       </Hud>
     </>
   );

@@ -8,10 +8,12 @@ export default function Init({
   handleClickFrame,
   currentArgs,
   initialSceneCardList,
+  handleDoubleClickFrame,
 }: {
   handleClickFrame: (args: TInitialSceneCard) => void;
   currentArgs: TInitialSceneCard | null;
   initialSceneCardList: TInitialSceneCard[];
+  handleDoubleClickFrame: (args: TInitialSceneCard) => void;
 }) {
   return initialSceneCardList.map((sceneCard, index) => {
     return (
@@ -19,6 +21,7 @@ export default function Init({
         key={index}
         {...sceneCard}
         handleClickFrame={handleClickFrame}
+        handleDoubleClickFrame={handleDoubleClickFrame}
         currentArgs={currentArgs}
       />
     );
