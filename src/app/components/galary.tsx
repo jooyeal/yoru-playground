@@ -15,7 +15,6 @@ export default function Galary() {
   ];
   return (
     <>
-      <color args={["ivory"]} attach="background" />
       <ambientLight intensity={0.5} />
       <group position={[0, 10, 0]}>
         <GalaryPoint />

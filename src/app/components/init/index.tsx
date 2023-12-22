@@ -2,16 +2,15 @@
 import { Gltf } from "@react-three/drei";
 import * as THREE from "three";
 import Frame from "./frame";
+import { TInitialSceneCard } from "../types";
 
 export default function Init({
   handleClickFrame,
 }: {
-  handleClickFrame: (name: string) => void;
+  handleClickFrame: (args: TInitialSceneCard) => void;
 }) {
   return (
-    // <Canvas camera={{ fov: 75, position: [0, 0, 20] }}> </Canvas>
     <>
-      <color attach="background" args={["#f0f0f0"]} />
       <Frame
         id="01"
         name="galary"
@@ -27,6 +26,8 @@ export default function Init({
         id="02"
         name="galary"
         author="Omar Faruq Tawsif"
+        position={new THREE.Vector3(...[0, 0, 0])}
+        rotation={new THREE.Euler(...[0, 0, 0])}
         handleClickFrame={handleClickFrame}
       >
         <Gltf src="glb1.glb" position={[0, -2, -3]} />

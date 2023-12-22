@@ -7,6 +7,7 @@ import { easing, geometry } from "maath";
 // import { suspend } from "suspend-react";
 import { GOLDENRATIO } from "@/app/utils/three";
 import * as THREE from "three";
+import { TInitialSceneCard } from "../types";
 
 extend(geometry);
 // const regular = import('@pmndrs/assets/fonts/inter_regular.woff')
@@ -20,9 +21,9 @@ type Props = {
   width?: number;
   height?: number;
   children: React.ReactNode;
-  position?: THREE.Vector3;
-  rotation?: THREE.Euler;
-  handleClickFrame: (name: string) => void;
+  position: THREE.Vector3;
+  rotation: THREE.Euler;
+  handleClickFrame: (args: TInitialSceneCard) => void;
 };
 
 export default function Frame({
@@ -85,7 +86,10 @@ export default function Frame({
       </Text>
       <mesh
         name={id}
-        onDoubleClick={(e) => (e.stopPropagation(), handleClickFrame(name))}
+        onClick={(e) => (
+          e.stopPropagation(),
+          handleClickFrame({ name: id, position, rotation })
+        )}
         onPointerOver={(e) => hover(true)}
         onPointerOut={() => hover(false)}
       >
