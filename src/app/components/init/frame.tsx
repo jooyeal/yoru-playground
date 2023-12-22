@@ -1,43 +1,24 @@
 "use client";
 import { useRef, useState } from "react";
 import { extend, useFrame } from "@react-three/fiber";
-import { useCursor, MeshPortalMaterial, Text } from "@react-three/drei";
+import { useCursor, MeshPortalMaterial, Text, Gltf } from "@react-three/drei";
 import { useRouter, useParams } from "next/navigation";
 import { easing, geometry } from "maath";
 // import { suspend } from "suspend-react";
-import { GOLDENRATIO } from "@/app/utils/three";
 import * as THREE from "three";
 import { TInitialSceneCard } from "../types";
+import { GOLDENRATIO } from "@/app/utils/three";
 
 extend(geometry);
 // const regular = import('@pmndrs/assets/fonts/inter_regular.woff')
 // const medium = import('@pmndrs/assets/fonts/inter_medium.woff')
 
 type Props = {
-  id: string;
-  name: string;
-  author: string;
-  bg?: THREE.ColorRepresentation;
-  width?: number;
-  height?: number;
-  children: React.ReactNode;
-  position: THREE.Vector3;
-  rotation: THREE.Euler;
+  currentArgs: TInitialSceneCard | null;
   handleClickFrame: (args: TInitialSceneCard) => void;
-};
+} & TInitialSceneCard;
 
-export default function Frame({
-  id,
-  name,
-  author,
-  bg,
-  width = 1,
-  height = GOLDENRATIO,
-  children,
-  handleClickFrame,
-  position,
-  rotation,
-}: Props) {
+export default function Frame({ handleClickFrame, ...rest }: Props) {
   const portalRef = useRef(null);
   const params = useParams();
   const router = useRouter();
@@ -48,13 +29,13 @@ export default function Frame({
       easing.damp(
         portalRef.current,
         "blend",
-        params.id === id ? 1 : 0,
+        params.id === rest.id ? 1 : 0,
         0.2,
         dt
       );
   });
   return (
-    <group position={position} rotation={rotation}>
+    <group position={rest.position} rotation={rest.rotation}>
       <Text
         // font={suspend(medium).default}
         fontSize={0.3}
@@ -64,7 +45,7 @@ export default function Frame({
         position={[-0.375, 0.715, 0.01]}
         material-toneMapped={false}
       >
-        {name}
+        {rest.title}
       </Text>
       <Text
         // font={suspend(regular).default}
@@ -73,9 +54,9 @@ export default function Frame({
         position={[0.4, -0.659, 0.01]}
         material-toneMapped={false}
       >
-        /{id}
+        /{rest.id}
       </Text>
-      <Text
+      {/* <Text
         // font={suspend(regular).default}
         fontSize={0.04}
         anchorX="right"
@@ -83,25 +64,26 @@ export default function Frame({
         material-toneMapped={false}
       >
         {author}
-      </Text>
+      </Text> */}
       <mesh
-        name={id}
-        onClick={(e) => (
-          e.stopPropagation(),
-          handleClickFrame({ name: id, position, rotation })
-        )}
+        name={rest.id}
+        onClick={(e) => (e.stopPropagation(), handleClickFrame(rest))}
         onPointerOver={(e) => hover(true)}
         onPointerOut={() => hover(false)}
       >
         {/**@ts-ignore */}
-        <roundedPlaneGeometry args={[width, height, 0.1]} />
+        <roundedPlaneGeometry args={[1, GOLDENRATIO, 0.1]} />
         <MeshPortalMaterial
           ref={portalRef}
-          events={params.id === id}
+          events={params.id === rest.id}
           side={THREE.DoubleSide}
         >
-          <color attach="background" args={bg ? [bg] : undefined} />
-          {children}
+          <color attach="background" args={rest.bg ? [rest.bg] : undefined} />
+          <Gltf
+            src={rest.src}
+            scale={rest.scale}
+            position={rest.gltfPosition}
+          />
         </MeshPortalMaterial>
       </mesh>
     </group>
