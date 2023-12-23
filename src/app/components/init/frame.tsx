@@ -78,6 +78,7 @@ export default function Frame({
           side={THREE.DoubleSide}
         >
           <color attach="background" args={rest.bg ? [rest.bg] : undefined} />
+          <ambientLight intensity={0.5} />
           <Gltf
             src={rest.src}
             scale={rest.scale}

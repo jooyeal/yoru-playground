@@ -11,17 +11,18 @@ import { useEffect, useRef, useState } from "react";
 import Galary from "./galary";
 import Init from "./init";
 import { TInitialSceneCard } from "./types";
+import VideoScreen from "./common/videoScreen";
 
 const initialSceneCardList = [
   {
     id: "01",
-    src: "glb2.glb",
+    src: "gojo_satoru.glb",
     targetSceneName: "galary",
     title: "test1",
     bg: "#e4cdac",
     text: "",
     scale: 8,
-    gltfPosition: new THREE.Vector3(0, -0.7, -2),
+    gltfPosition: new THREE.Vector3(0, -1, -2),
     position: new THREE.Vector3(-1.15, 0, 0),
     rotation: new THREE.Euler(0, 0.5, 0),
   },
@@ -87,7 +88,7 @@ export default function Main({
   useEffect(() => {
     if (cameraControlsRef.current) {
       // disable mouse event
-      cameraControlsRef.current.disconnect();
+      // cameraControlsRef.current.disconnect();
     }
   }, [cameraControlsRef]);
 
@@ -109,9 +110,8 @@ export default function Main({
         minPolarAngle={0}
         maxPolarAngle={Math.PI / 2}
       />
-      <mesh>
-        <mesh name="init" position={[0, 0, 0]}></mesh>;
-      </mesh>
+      <mesh name="init" position={[0, 0, 0]}></mesh>
+      <VideoScreen src="/sample_video.mp4" name="sample_video" />
       <Galary />
       <Init
         initialSceneCardList={initialSceneCardList}
