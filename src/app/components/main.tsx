@@ -6,6 +6,10 @@ import {
   PerspectiveCamera,
   Text,
   Hud,
+  Center,
+  BBAnchor,
+  Html,
+  Float,
 } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import Galary from "./galary";
@@ -18,7 +22,7 @@ const initialSceneCardList = [
     id: "01",
     src: "gojo_satoru.glb",
     targetSceneName: "galary",
-    title: "test1",
+    title: "JUJUTSU",
     bg: "#e4cdac",
     text: "",
     scale: 8,
@@ -29,7 +33,7 @@ const initialSceneCardList = [
   {
     id: "02",
     src: "glb1.glb",
-    targetSceneName: "galary",
+    targetSceneName: "sample_video",
     title: "test2",
     bg: undefined,
     text: "",
@@ -66,16 +70,15 @@ export default function Main({
 
   const moveTo = (name: string, pos?: THREE.Vector3) => {
     const active = scene.getObjectByName(name);
-
-    if (active?.parent) {
-      active.parent.localToWorld(
+    if (active) {
+      active?.localToWorld(
         position.set(
           pos?.x ? pos.x : 0,
           pos?.y ? pos.y : 0,
           pos?.z ? pos.z : 1.5
         )
       );
-      active.parent.localToWorld(focus.set(0, 0, 0));
+      active?.localToWorld(focus.set(0, 0, 0));
     }
     if (cameraControlsRef.current)
       cameraControlsRef.current.setLookAt(
@@ -111,7 +114,11 @@ export default function Main({
         maxPolarAngle={Math.PI / 2}
       />
       <mesh name="init" position={[0, 0, 0]}></mesh>
-      <VideoScreen src="/sample_video.mp4" name="sample_video" />
+      <VideoScreen
+        src="/sample_video.mp4"
+        name="sample_video"
+        position={[10, 10, 10]}
+      />
       <Galary />
       <Init
         initialSceneCardList={initialSceneCardList}
@@ -125,6 +132,7 @@ export default function Main({
         }}
         currentArgs={currentArgs}
       />
+
       <Hud>
         <PerspectiveCamera makeDefault position={[0, 0, 20]} />
         <Text
@@ -134,12 +142,28 @@ export default function Main({
           fontSize={0.5}
           onClick={(e) => {
             e.stopPropagation();
-            moveTo("init", new THREE.Vector3(0, 0, 3));
+            moveTo("init");
           }}
         >
           GO TO MAIN
         </Text>
       </Hud>
+      {/* <Float>
+        <Html
+          style={{ userSelect: "none" }}
+          castShadow
+          receiveShadow
+          occlude="blending"
+          transform
+        >
+          <iframe
+            title="embed"
+            width={700}
+            height={500}
+            src="https://yorulog-v2.vercel.app"
+          />
+        </Html>
+      </Float> */}
     </>
   );
 }

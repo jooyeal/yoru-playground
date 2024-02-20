@@ -4,14 +4,16 @@ import { extend, useFrame } from "@react-three/fiber";
 import { useCursor, MeshPortalMaterial, Text, Gltf } from "@react-three/drei";
 import { useRouter, useParams } from "next/navigation";
 import { easing, geometry } from "maath";
-// import { suspend } from "suspend-react";
+import { suspend } from "suspend-react";
 import * as THREE from "three";
 import { TInitialSceneCard } from "../types";
 import { GOLDENRATIO } from "@/app/utils/three";
 
 extend(geometry);
-// const regular = import('@pmndrs/assets/fonts/inter_regular.woff')
-// const medium = import('@pmndrs/assets/fonts/inter_medium.woff')
+// @ts-ignore
+const regular = import("@pmndrs/assets/fonts/inter_regular.woff");
+// @ts-ignore
+const medium = import("@pmndrs/assets/fonts/inter_medium.woff");
 
 type Props = {
   currentArgs: TInitialSceneCard | null;
@@ -42,8 +44,8 @@ export default function Frame({
   return (
     <group position={rest.position} rotation={rest.rotation}>
       <Text
-        // font={suspend(medium).default}
-        fontSize={0.3}
+        font={(suspend(medium) as any).default}
+        fontSize={0.15}
         anchorY="top"
         anchorX="left"
         lineHeight={0.8}
@@ -53,7 +55,7 @@ export default function Frame({
         {rest.title}
       </Text>
       <Text
-        // font={suspend(regular).default}
+        font={(suspend(regular) as any).default}
         fontSize={0.1}
         anchorX="right"
         position={[0.4, -0.659, 0.01]}
